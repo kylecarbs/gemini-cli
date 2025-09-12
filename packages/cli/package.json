@@ -1,15 +1,16 @@
 {
-  "name": "@google/gemini-cli",
-  "version": "0.6.0-nightly",
+  "name": "@hugodutka/gemini-cli",
+  "version": "0.6.0-nightly-20250912-5",
   "description": "Gemini CLI",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/hugodutka/gemini-cli.git"
   },
   "type": "module",
   "main": "dist/index.js",
-  "bin": {
-    "gemini": "dist/index.js"
+  "exports": {
+    ".": "./dist/index.js",
+    "./ui": "./dist/src/ui.js"
   },
   "scripts": {
     "build": "node ../../scripts/build_package.js",
@@ -19,7 +20,8 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:ci": "vitest run --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "publish-package": "cp package.json package.json.bak && cp dist/package.json package.json && npm publish --access public && mv package.json.bak package.json"
   },
   "files": [
     "dist"

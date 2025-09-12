@@ -18,7 +18,7 @@
 // limitations under the License.
 
 import { execSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 if (!process.cwd().includes('packages')) {
@@ -34,4 +34,24 @@ execSync('node ../../scripts/copy_files.js', { stdio: 'inherit' });
 
 // touch dist/.last_build
 writeFileSync(join(process.cwd(), 'dist', '.last_build'), '');
+
+// because of the @hugodutka aliases we manually fix up the dependency path
+// for the gemini-cli-core package that gemini-cli depends on
+if (process.cwd().endsWith('cli')) {
+  const currentCoreVersion = JSON.parse(
+    readFileSync('../../packages/core/package.json', 'utf8'),
+  ).version;
+  const packageJsonContent = readFileSync(
+    join(process.cwd(), 'dist/package.json'),
+    'utf8',
+  );
+  const parsedContent = JSON.parse(packageJsonContent);
+  parsedContent.dependencies['@google/gemini-cli-core'] =
+    `npm:@hugodutka/gemini-cli-core@${currentCoreVersion}`;
+  writeFileSync(
+    join(process.cwd(), 'dist/package.json'),
+    JSON.stringify(parsedContent, null, 2),
+  );
+}
+
 process.exit(0);
