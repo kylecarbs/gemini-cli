@@ -42,6 +42,7 @@ export interface InputPromptProps {
   commandContext: CommandContext;
   placeholder?: string;
   focus?: boolean;
+  borderColor?: string;
   inputWidth: number;
   suggestionsWidth: number;
   shellModeActive: boolean;
@@ -60,6 +61,7 @@ export const InputPrompt: React.FC<InputPromptProps> = ({
   commandContext,
   placeholder = '  Type your message or @path/to/file',
   focus = true,
+  borderColor,
   inputWidth,
   suggestionsWidth,
   shellModeActive,
@@ -714,11 +716,12 @@ export const InputPrompt: React.FC<InputPromptProps> = ({
       <Box
         borderStyle="round"
         borderColor={
-          shellModeActive
+          borderColor ??
+          (shellModeActive
             ? theme.status.warning
             : focus
               ? theme.border.focused
-              : theme.border.default
+              : theme.border.default)
         }
         paddingX={1}
       >
